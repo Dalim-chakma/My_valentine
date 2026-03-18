@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine Link Generator</title>
+    <style>
+        body { background-color: #ffeef2; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 400px; }
+        
+        /* জেনারেটর ফর্মের ডিজাইন */
+        .form-group { text-align: left; margin-bottom: 15px; }
+        label { font-weight: bold; color: #555; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin-top: 5px; border: 2px solid #ffb6c1; border-radius: 15px; box-sizing: border-box; outline: none; }
+        
+        .gen-btn { background: #ff2d75; color: white; width: 100%; padding: 15px; border: none; border-radius: 15px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        #link-display { margin-top: 15px; padding: 10px; background: #f0f0f0; border-radius: 10px; font-size: 12px; word-break: break-all; display: none; }
+
+        /* মূল কার্ডের ডিজাইন (২য় ছবি) */
+        h1 { color: #d63384; font-size: 24px; margin: 20px 0; }
+        .btn-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .action-btn { padding: 12px 30px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; font-size: 16px; }
+        #yesBtn { background: #ff2d75; color: white; }
+        #noBtn { background: #ddd; position: relative; }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div id="generator-screen" class="card">
+        <h2 style="color: #333;">💖 Valentine Link Generator</h2>
+        <p style="color: #ff2d75; font-size: 14px;">Create personalized proposals!</p>
+        
+        <div class="form-group">
+            <label>Valentine Name (কাকে পাঠাবেন):</label>
+            <input type="text" id="targetName" placeholder="e.g., Lily Marma">
+        </div>
+        
+        <button class="gen-btn" onclick="generateLink()">✨ Generate Link</button>
+        
+        <div id="link-display">
+            <p>আপনার লিঙ্কটি কপি করুন:</p>
+            <strong id="generatedUrl"></strong>
+        </div>
+    </div>
+
+    <div id="proposal-screen" class="card hidden">
+        <img id="main-img" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpneXp1Mnl0eG9ueXpueXpueXpueXpueXpueXpueXpueXpueXpueZCZ3M9MTY4NDc5OTU0NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" width="120">
+        <h1 id="displayMsg">Will you be my valentine?</h1>
+        
+        <div class="btn-container">
+            <button id="yesBtn" class="action-btn">Yes</button>
+            <button id="noBtn" class="action-btn">No</button>
+        </div>
+    </div>
+
+    <script>
+        // লিঙ্ক থেকে নাম রিড করা
+        const urlParams = new URLSearchParams(window.location.search);
+        const nameParam = urlParams.get('name');
+
+        if (nameParam) {
+            // যদি লিঙ্কে নাম থাকে, তবে সরাসরি প্রপোজাল পেজ দেখাবে
+            document.getElementById('generator-screen').classList.add('hidden');
+            document.getElementById('proposal-screen').classList.remove('hidden');
+            document.getElementById('displayMsg').innerText = nameParam + ", will you be my valentine?";
+        }
+
+        // লিঙ্ক জেনারেট করার ফাংশন
+        function generateLink() {
+            const name = document.getElementById('targetName').value;
+            if (name.trim() === "") {
+                alert("দয়া করে একটি নাম লিখুন!");
+                return;
+            }
+            
+            const baseUrl = window.location.href.split('?')[0];
+            const finalUrl = baseUrl + "?name=" + encodeURIComponent(name);
+            
+            const displayDiv = document.getElementById('link-display');
+            const urlText = document.getElementById('generatedUrl');
+            
+            displayDiv.style.display = "block";
+            urlText.innerText = finalUrl;
+            
+            // অটো কপি করার সুবিধা
+            navigator.clipboard.writeText(finalUrl);
+            alert("লিঙ্কটি কপি হয়ে গেছে! এবার এটি আপনার প্রিয়জনকে পাঠান।");
+        }
+
+        // No বাটন পালানো
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+
+        function moveNo() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = "fixed";
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        }
+        noBtn.addEventListener("mouseover", moveNo);
+        noBtn.addEventListener("touchstart", moveNo);
+
+        // Yes ক্লিক করলে
+        yesBtn.addEventListener("click", () => {
+            document.getElementById("displayMsg").innerText = "I knew it! ❤️😘";
+            document.getElementById("main-img").src = "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpneXp1Mnl0eG9ueXpueXpueXpueXpueXpueXpueXpueXpueXpueZCZ3M9MTY4NDc5OTU0NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/vXGZ075fC5Hh929yvX/giphy.gif";
+            noBtn.style.display = "none";
+            yesBtn.style.display = "none";
+        });
+    </script>
+</body>
+</html>
