@@ -23,7 +23,7 @@
             text-align: center; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
             width: 100%; 
-            max-width: 380px; /* মোবাইলের জন্য পারফেক্ট সাইজ */
+            max-width: 380px;
         }
         
         h2 { color: #333; font-size: 22px; margin-bottom: 10px; }
@@ -34,6 +34,152 @@
         
         input { 
             width: 100%; 
+            padding: 12px 15px; 
+            border: 2px solid #ffb6c1; 
+            border-radius: 12px; 
+            outline: none; 
+            font-size: 16px;
+        }
+
+        .gen-btn { 
+            background: #ff2d75; 
+            color: white; 
+            width: 100%; 
+            padding: 14px; 
+            border: none; 
+            border-radius: 12px; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+        }
+
+        #link-display { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background: #fdf0f4; 
+            border-radius: 12px; 
+            border: 1px dashed #ff2d75;
+            display: none; 
+        }
+        
+        #generatedUrl { 
+            display: block;
+            margin-top: 10px;
+            font-size: 13px; 
+            color: #333;
+            word-break: break-all;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        h1 { color: #d63384; font-size: 24px; margin: 20px 0; line-height: 1.4; }
+        .btn-container { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 20px; 
+            justify-content: center;
+        }
+        .action-btn { 
+            padding: 12px 25px; 
+            border-radius: 12px; 
+            border: none; 
+            font-weight: bold; 
+            cursor: pointer; 
+            font-size: 18px; 
+            min-width: 100px;
+        }
+        #yesBtn { background: #ff2d75; color: white; }
+        #noBtn { background: #ddd; color: #333; position: relative; }
+        
+        .hidden { display: none !important; }
+
+        #main-img {
+            max-width: 150px;
+            height: auto;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="generator-screen" class="card">
+        <h2>💖 Link Generator</h2>
+        <p class="subtitle">আপনার কাস্টম মেসেজটি লিখুন</p>
+        
+        <div class="form-group">
+            <label>মেসেজটি লিখুন:</label>
+            <input type="text" id="targetName" placeholder="উদা: Lily, I love you...">
+        </div>
+        
+        <button class="gen-btn" onclick="generateLink()">✨ Generate Link</button>
+        
+        <div id="link-display">
+            <p style="font-size: 13px; margin:0;">আপনার লিঙ্কটি কপি করুন:</p>
+            <span id="generatedUrl"></span>
+        </div>
+    </div>
+
+    <div id="proposal-screen" class="card hidden">
+        <img id="main-img" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpneXp1Mnl0eG9ueXpueXpueXpueXpueXpueXpueXpueXpueXpueZCZ3M9MTY4NDc5OTU0NyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/cLS1cfxvGOPVpf9g3y/giphy.gif" alt="Cute Gif">
+        <h1 id="displayMsg"></h1>
+        <div class="btn-container">
+            <button id="yesBtn" class="action-btn">Yes</button>
+            <button id="noBtn" class="action-btn">No</button>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const nameParam = urlParams.get('msg');
+
+        if (nameParam) {
+            document.getElementById('generator-screen').classList.add('hidden');
+            document.getElementById('proposal-screen').classList.remove('hidden');
+            document.getElementById('displayMsg').innerText = decodeURIComponent(nameParam);
+        }
+
+        function generateLink() {
+            const msg = document.getElementById('targetName').value;
+            if (msg.trim() === "") {
+                alert("দয়া করে কিছু একটা লিখুন!");
+                return;
+            }
+            
+            const baseUrl = window.location.origin + window.location.pathname;
+            const finalUrl = baseUrl + "?msg=" + encodeURIComponent(msg);
+            
+            document.getElementById('link-display').style.display = "block";
+            document.getElementById('generatedUrl').innerText = finalUrl;
+            
+            navigator.clipboard.writeText(finalUrl);
+            alert("লিঙ্কটি কপি হয়েছে!");
+        }
+
+        const noBtn = document.getElementById("noBtn");
+        const yesBtn = document.getElementById("yesBtn");
+
+        function moveNo() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+            noBtn.style.position = "fixed";
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        }
+        noBtn.addEventListener("mouseover", moveNo);
+        noBtn.addEventListener("touchstart", moveNo);
+
+        yesBtn.addEventListener("click", () => {
+            // আপনার অনুরোধ অনুযায়ী লেখা পরিবর্তন করা হলো
+            document.getElementById("displayMsg").innerText = "I am very happy ❤️😘";
+            // সচল এবং কিউট নতুন GIF লিঙ্ক
+            document.getElementById("main-img").src = "https://media.tenor.com/716mPscS30UAAAAM/happy-cat.gif";
+            noBtn.classList.add("hidden");
+            yesBtn.classList.add("hidden");
+        });
+    </script>
+</body>
+</html>
             padding: 12px 15px; 
             border: 2px solid #ffb6c1; 
             border-radius: 12px; 
